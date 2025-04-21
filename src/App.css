@@ -1,0 +1,243 @@
+
+
+/* Toast
+============================================================= */
+#liveToast.toast{
+  position: fixed;
+  bottom: 40px;
+  right: 40px;
+  z-index: 5;
+}
+
+.navbar-nav.custom{
+  display: block !important;
+}
+
+.navbar-nav.custom li{
+  float: inline-start !important;
+  margin: 0 5px;
+}
+
+/* Loading
+============================================================= */
+.loading-widget,
+.loading-view{
+  position: absolute;
+  height: 80%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loading-widget .spinner-border,
+.loading-view .spinner-border{
+  height: 150px;
+  width: 150px;
+}
+
+/* Dialog */
+.loading-screen{
+  position: fixed;
+  height: 90%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.2);
+  z-index: 10000;
+}
+
+.loading .card {
+  padding: 40px;
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.loading .custom-spinner {
+  width: 100px;
+  height: 100px;
+}
+
+
+/* =============================== END DIALOGS =============================== */
+
+:root {
+/* --primary : #dc3545; */
+--dark : #757575;
+}
+
+.bg-dark-gradient {
+background: rgb(2,0,36);
+background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 20%, rgba(87,81,39,1) 100%);
+}
+
+.w-5{width: 5vw !important;}
+
+.ff-custom{font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;line-height: 25px;}
+
+.fs-sm {font-size: small;}
+.fs-xs {font-size: x-small;}
+
+.h-min-40{min-height: 40vh !important; overflow: hidden !important;}
+
+/* Hight */
+.h-20{height: 20vh !important; overflow: hidden !important;}
+.h-30{height: 30vh !important; overflow: hidden !important;}
+.h-35{height: 35vh !important; overflow: hidden !important;}
+.h-40{height: 40vh !important; overflow: hidden !important;}
+.h-50{height: 50vh !important; overflow: hidden !important;}
+.h-60{height: 60vh !important; overflow: hidden !important;}
+.h-70{height: 70vh !important; overflow: hidden !important;}
+.h-75{height: 75vh !important; overflow: hidden !important;}
+.h-80{height: 80vh !important; overflow: hidden !important;}
+.h-85{height: 85vh !important; overflow: hidden !important;}
+.h-90{height: 90vh !important; overflow: hidden !important;}
+.h-100{height: 100vh !important; overflow: hidden !important;}
+
+/* Width */
+.w-80{width: 80%;}
+.w-90{width: 90%;}
+
+/* Overflow */
+.of-auto {overflow-y: auto !important;}
+.of-x-auto {display: inline-flex; overflow-x: auto !important;}
+.of-none {overflow: hidden !important;}
+
+/* Hover */
+.pointer:hover{
+  cursor: pointer !important;
+}
+
+.hoverable:hover{
+  cursor: pointer;
+  background-color: #e0dbdb !important;
+}
+
+.form-control.custom{
+  border-radius: unset;
+  box-shadow: unset;
+  border: unset;
+  border-bottom: 1px solid #cbcaca !important;
+}
+
+.form-control.custom:focus{
+  box-shadow: 0 3px 2px -2px blue;
+}
+
+/* ------------------------------------------------------------------------------ */
+.input-group.custom-border .input-group-text{
+  background-color: transparent !important;
+  border: none !important;
+  width: 42px;
+  justify-content: center;
+}
+
+.input-group.custom-border .form-control{
+  border-radius: 8px !important;
+  box-shadow: none;
+}
+
+/* Admin Page */
+/* ------------------------------------------------------------------------------ */
+.admin-register-view{
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+.admin-register-view .register-form{
+  background-color: rgba(255, 255, 255, 0.6);
+}
+
+.bg-transparent-60{
+  background-color: rgba(255, 255, 255, 0.60);;
+}
+
+/* ------------------------------------------------------------------------------ */
+.admin-product-widget {
+  cursor: pointer;
+}
+
+.admin-product-widget:hover {
+  background: #f6f5f5;
+}
+
+.admin-product-image-container{
+  position: relative;
+  width: 70% !important;
+}
+
+.admin-product-image{
+  width: 100% !important;
+}
+
+.admin-product-image-actions{
+  position: absolute;
+  bottom: 10%;
+  left: 20px;
+  right: 20px;
+  padding: 2px;
+  border-radius: 20px;
+  background-color: rgba(255, 255, 255, 0.465);
+  display: flex;
+  justify-content: space-between !important;
+  align-items: center;
+}
+
+.admin-product-image-actions button.btn{
+  width: 50%;
+}
+
+.admin-social-buttons button{
+  width: 50px !important;
+  height: 50px !important;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.admin-social-buttons button i{
+  font-size: 25px;
+}
+
+/* Book Widget */
+.book-widget-image-container{
+  transition: 200ms all ease-in-out !important;
+  width: 100%;
+  height: fit-content !important;
+  aspect-ratio: 0.7 !important;
+}
+
+.book-cover{
+  width: 100% !important;
+  aspect-ratio: 0.7 !important;
+}
+
+.book-widget-image-container img{
+  width: 100%;
+  height: 100% !important;
+}
+
+.book-view{
+  transition: 200ms all ease-in-out !important;
+}
+
+.book-view:hover{
+  transform: scale(1.05);
+}
+
+.list-group-item-action{
+  cursor: pointer;
+}

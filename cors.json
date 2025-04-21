@@ -1,0 +1,9 @@
+[
+    {
+      "origin": ["https://panda-books-25.web.app"],
+      "method": ["GET"],
+      "maxAgeSeconds": 3600
+    }
+]
+
+  
