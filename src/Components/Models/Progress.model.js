@@ -1,3 +1,5 @@
+import { dateNow, generateID } from "../Utils/static.util";
+
 export default class Progress {
 
     /** @type {String} Book ID */ id;
@@ -14,7 +16,12 @@ export default class Progress {
      * @param {String} data.isFavorite
      */
     static instance(data ){
-        return data;
+        return {
+            id: data.id ?? generateID(),
+            index : data.index ?? 1,
+            lastUpdate : data.lastUpdate ?? dateNow(),
+            isFavorite: data.isFavorite ?? false,
+        };
     }
 
 }

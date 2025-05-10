@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Auth from "../../Utils/Auth.firebase";
 import Notifier from "../../Utils/Notifier";
 import LoadingPage from "../../Widgets/Loading.page";
-import RegisterView from '../Register.view'
+import RegisterView from '../User/Register.view'
 
 const AdminNav = ({children, view = 'books', onClick = ((view)=>{})}) => {
 

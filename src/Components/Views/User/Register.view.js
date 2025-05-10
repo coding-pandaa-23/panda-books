@@ -1,11 +1,11 @@
 import { useState } from "react";
-import Notifier from "../Utils/Notifier";
-import Auth from "../Utils/Auth.firebase";
+import Notifier from "../../Utils/Notifier";
+import Auth from "../../Utils/Auth.firebase";
 
 const RegisterView = () => {
 
     let auth = new Auth();
-    let notifier = new Notifier();
+    let notifier = new Notifier()
 
     let [email, setEmail] = useState();
     let [password, setPassword] = useState();
@@ -41,7 +41,7 @@ const RegisterView = () => {
     }
 
     return ( <>
-        <div className="admin-register-view h-100 d-flex align-items-center justify-content-center bg-light">
+        <div className="admin-register-view h-90 d-flex align-items-center justify-content-center">
            <div className="w-100">
                 <div className="row">
                     <div className="col-12 col-md-6 offset-md-3 col-lg-4 offset-lg-4">
@@ -89,12 +89,6 @@ const RegisterView = () => {
 
                                     <div className="mb-3">
                                         <button className="btn btn-primary w-100" type="submit">Login</button>
-                                    </div>
-
-                                    <div className="mb-3 text-center">
-                                        <a href="/" className="btn border-0">
-                                            <i className="fa-solid fa-house fa-xl"></i>
-                                        </a>
                                     </div>
                                 </form>
                             </div>

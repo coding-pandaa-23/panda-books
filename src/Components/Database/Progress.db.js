@@ -128,7 +128,7 @@ export default class ProgressDB {
 
     /**
      * @param {String} id 
-     * @returns {Promise<import('../Models/Progress.model').default | null>}
+     * @returns {Promise<import('../Models/Progress.model').default>}
      */
     async checkout(id){
         try {
@@ -138,18 +138,17 @@ export default class ProgressDB {
                 if(ind >= 0){
                     return list[ind];
                 }else {
-                    list.push(Progress.instance({id: id}));
+                    let nProgress = Progress.instance({id: id})
+                    list.push(nProgress);
                     await this.updateList(list);
+                    return nProgress;
                 }
-            }else{
-                return null;
             }
-
-
         } catch (error) {
             console.log(`Database.firebase(getByID:UserDB) --> ${error}`)
-            return null
         }
+
+        return Progress.instance();
     }
 
     /**

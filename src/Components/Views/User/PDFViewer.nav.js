@@ -1,6 +1,3 @@
-import FavoriteButton from "../../Widgets/FavoriteButton.wid";
-
-
 /**
  * 
  * @param {Object} obj 
@@ -22,19 +19,14 @@ import FavoriteButton from "../../Widgets/FavoriteButton.wid";
  * 
  */
 const BookViewerNav = ({
-    bid,
     zoom,
-    onZoomIn,
-    onZoomOut,
-
     index,
     numberOfPages,
+    onZoomIn,
+    onZoomOut,
     onNext,
     onPrev,
-
-    progress,
     resetProgress,
-    onRegister,
 }) => {
 
     return ( <>
@@ -43,23 +35,14 @@ const BookViewerNav = ({
             <div className="card border-0 rounded-0 shadow-sm fixed-top m-0 px-1 py-2">
 
                 <div className='row m-0'>
-                    {/* Home */}
+                    {/* Main Actions */}
                     <div className="col-6 col-md-4 d-flex justify-content-start align-items-center">
-                        <a href={`/books/${bid}`} className="btn btn-light border-0 text-black mx-1">
+                        <a href='/' className="btn btn-light border-0 text-black mx-1">
                             <i className="fa-solid fa-chevron-left fa-lg"></i>
                         </a>
 
                         {numberOfPages && <button className="btn btn-light border-0 text-black mx-1" onClick={resetProgress}>
                             <i className="fa-solid fa-arrow-rotate-left fa-lg"></i>
-                        </button>}
-
-                        {/* Favorite Button */}
-                        {numberOfPages && <FavoriteButton bid={progress?.id} onRegister={onRegister} />}
-
-                        {/* Favorite Button */}
-                        {numberOfPages && <button className="btn btn-light border-0 text-secondary mx-1">
-                            {/* <i class="fa-solid fa-bookmark"></i>     */}
-                            <i class="fa-regular fa-bookmark fa-lg"></i>    
                         </button>}
                     </div>
 

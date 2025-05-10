@@ -36,14 +36,10 @@ i.glow{
   z-index: 10000;
 }
 
-.navbar-nav.custom{
-  display: block !important;
+.link-secondary.custom:hover{
+  color: black !important;
 }
 
-.navbar-nav.custom li{
-  float: inline-start !important;
-  margin: 0 5px;
-}
 
 /* Loading
 ============================================================= */

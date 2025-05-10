@@ -1,243 +1,115 @@
 import { useEffect, useState } from "react";
-import BookWidget from "../../Widgets/Book.wid";
-import LoadingPage from "../../Widgets/Loading.page";
-import UserNav from "../Public/User.nav";
+import UserNav from "./User.nav";
 import DB from "../../Database/Database.db";
 
-
 const HomeView = () => {
+    const db = new DB();
 
-    let db = new DB();
+    const [isLoading, setLoading] = useState(true);
+    const [search, setSearch] = useState('');
+    const [showMyBooks, setShowMyBooks] = useState(false);
 
-    let [books, setBooks] = useState([]); 
-    let [categories, setCategories] = useState([]); 
-    let [progressList, setProgressList] = useState([]);
-
-    let [isLoading, setLoading] = useState(true);
+    const [books, setBooks] = useState([]);
+    const [progressList, setProgressList] = useState([]);
 
     useEffect(()=>{
-        db.publicStream((bookList, categoryList)=>{
+        initialize();
+        
+        // eslint-disable-next-line
+    }, [])
+
+    async function initialize(){
+        db.publicStream((bookList)=>{
             setBooks(bookList);
-            setCategories(categoryList);
-            setLoading(false)
         });
 
-        db.userStream((mUser, progList)=>{
-            setProgressList(progList)
+        db.userStream((mUser, pList)=>{
+            setProgressList(pList);
+            setLoading(false);
         })
-
-        // eslint-disable-next-line
-    },[])
-
-    // 
-    function continueReadingFilter(book, ind){
-        return ind < 6 && progressList.find((p)=> p.id === book.id)?.index > 1
+        
     }
 
-    // 
-    function recentlyAddedFilter(book, ind){
-        return ind < 6;
+    function showBook(book){
+        window.location.href = '/books/'+book.id
     }
-    
-    function continueReadingList(){
-        let list = progressList.filter((p)=> p.index > 1);
-        return list;
+
+    function getProgressById(bid){
+        return progressList.find((p)=> p.id === bid);
+    }
+
+    function calcProgress(book){
+        let finished = parseFloat(getProgressById(book.id)?.index ?? 0) ;
+        let nop = parseFloat(book.numberOfPages) ?? 1;
+
+        return ((finished / nop) * 100).toFixed(0)
+    }
+
+    function toggleMyBooks(){
+        setShowMyBooks(!showMyBooks);
+    }
+
+    function filterBook(book){
+        let isMyBook = true;
+        if(showMyBooks){
+            isMyBook = progressList.findIndex((p)=> p.id === book.id) >= 0;
+        }
+
+        const equalTitle = book.title.toLowerCase().includes(search.toLowerCase())
+
+        return isMyBook && equalTitle;
     }
 
     return ( <>
-        {/* Top Nav */}
-        <UserNav 
-            view="home">
+        <UserNav isLoading={isLoading}>
+            <div className="container">
+                <div className="row">
+                    <div className="col-12 col-md-8 offset-md-2">
+                        <div className="card shadow border-0 mb-3">
+                            <div className="input-group">
 
-            {/* View */}
-            <LoadingPage isLoading={isLoading} >
-                
-                <div className="container-fluid">
-                    <div className="row m-0">  
-                        
-                        <div className="col-12 my-4">
-                            <div className="card border-0 rounded-0">
-                                <div className="card-body">
+                                <span className="input-group-text border-0 bg-transparent">
+                                    <i className="fa-solid fa-magnifying-glass"></i>
+                                </span>
 
-                                    <div className="text-center mb-2 ff-gill fw-bold fs-3">
-                                        EXPLORE THE VAST WORLD OF BOOKS
-                                    </div>
+                                <input 
+                                    type="text" className="form-control shadow-none border-0 px-3 py-2" placeholder="Search"
+                                    value={search} onChange={(e)=> setSearch(e.target.value)}/>
 
-                                    <p className="text-center mb-4 ff-gill">Read, discover, and explore your next favorite book online.</p>
+                                <span className="input-group-text border-0 text-bg-primary pointer px-auto" onClick={toggleMyBooks}>
+                                    {showMyBooks && <span>All Books</span>}
+                                    {!showMyBooks && <span>My Books</span>}
+                                </span>
+                            </div>
+                        </div>
 
-                                    <div className="col-10 offset-1 col-md-6 offset-md-3 pointer" onClick={(e)=> window.location.href = '/library'}>
-                                        <div className="input-group">
-                                            <input type="text" className="form-control border-0 rounded-0 shadow-none bg-light fs-5" placeholder="Find Book" readOnly/>
-                                        
-                                            <span className="input-group-text border-0 rounded-0 bg-danger">
-                                                <i className="fa-solid fa-magnifying-glass text-white"></i>
-                                            </span>
+                        {/* Books List */}
+                        <div className="card border-0 shadow h-80 of-auto">
+                            <ul className="list-group list-group-flush">
+                            {books
+                            .filter((book)=> filterBook(book))
+                            .map((book, ind)=> ( 
+                                <li key={ind} className="list-group-item list-group-item-action" onClick={(e)=> showBook(book)}>
+                                        <div>
+                                            <div className="d-flex justify-content-between align-items-center">
+                                                <span className="text-truncate w-75">{book.title}</span>
+                                                <span className="w-25 text-end">
+                                                    {getProgressById(book.id) && <button className="btn btn-sm btn-primary rounded-pill disabled border-0 mx-1">
+                                                        {calcProgress(book)} %
+                                                    </button>}
+
+                                                    {!getProgressById(book.id) && <button className="btn btn-sm border-0 disabled border-0 mx-1">
+                                                        Start reading
+                                                    </button>}
+                                                </span>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-                            </div>
+                                </li>))}
+                            </ul>
                         </div>
-
-                        {/* Categories Section */}
-                        <div className="categories col-12 mb-3">
-                            <p className="ff-gill text-secondary mb-3 text-center">Explore Categories</p>
-
-                            {categories.map((category, ind)=>(
-                                <a key={ind} href={`/library/${category.id}`} className="btn btn-light rounded-pill mx-1 btn-sm mb-2">{category.title}</a>
-                            ))}
-
-                            <div>
-                                <hr className="mx-5 my-3"/>
-                            </div>
-                        
-                        </div>
-
-                       
-
-                        {/* Continue Reading */}
-                        {continueReadingList().length > 0 && <div className="col-12 mb-3">
-                            <div className="mb-4">
-                                <span className="fs-3">Continue Reading</span>
-                                <a className="ms-2" href="/continue-reading"><i className="fa-solid fa-arrow-up-right-from-square"></i></a>
-                            </div>
-
-                            <div className={`of-auto pt-2 col-12 mb-3`}>
-                                <div className="row m-0">
-                                    {books
-                                    .filter(continueReadingFilter)
-                                    .map((book, ind)=> <BookWidget key={ind} book={book}/>)}
-                                </div>
-                            </div>
-
-                            <div>
-                                <hr className="mx-5 my-3"/>
-                            </div>
-
-                        </div>}
-
-                        {/* Recently Added Book List */}
-                        <div className="col-12 mb-3">
-                            <div className="mb-4">
-                                <span className="fs-3">Recently Added</span>
-                                <a className="ms-2" href="/library"><i className="fa-solid fa-arrow-up-right-from-square"></i></a>
-                            </div>
-
-                            <div className={`of-auto pt-2 col-12 mb-5`}>
-                                <div className="row m-0">
-                                    {books
-                                    .filter(recentlyAddedFilter)
-                                    .map((book, ind)=> <BookWidget key={ind} book={book}/>)}
-                                </div>
-                            </div>
-
-                            <div>
-                                <hr className="mx-5 my-3"/>
-                            </div>
-                        </div>
-
-                        <div className="col-12 mb-5">
-                            <div className="fs-3 ff-gill mb-4">Community</div>
-
-                            <div className="card rounded-0 border-0 border-primary border border-bottom border-4 h-40 p-4 of-auto">
-                                {/* Comment 1 */}
-                                <div className="d-flex justify-content-between align-items-center mb-2 bg-light ff-gill p-1 px-3 fs-sm">
-                                    <span className="">
-                                        <b className="me-2">James.B.</b>
-                                        <span>This Book is one of a kind.</span>
-                                    </span>
-
-                                    <button className="btn btn-light btn-sm text-secondary">
-                                        <i className="fa-solid fa-book-open me-2"></i>
-                                        Rich Dad Poor Dad
-                                    </button>
-                                </div>
-
-                                {/* Comment 2 */}
-                                <div className="d-flex justify-content-between align-items-center mb-2 bg-light ff-gill p-1 px-3 fs-sm">
-                                    <span className="">
-                                        <b className="me-2">Sara Maher</b>
-                                        <span>I've read this book many times and every time i enjory it</span>
-                                    </span>
-
-                                    <button className="btn btn-light btn-sm text-secondary">
-                                        <i className="fa-solid fa-book-open me-2"></i>
-                                        Rich Dad Poor Dad
-                                    </button>
-                                </div>
-
-                                {/* Comment 3 */}
-                                <div className="d-flex justify-content-between align-items-center mb-2 bg-light ff-gill p-1 px-3 fs-sm">
-                                    <span className="">
-                                        <b className="me-2">Mohammed Subhi</b>
-                                        <span>This is how you change your life</span>
-                                    </span>
-
-                                    <button className="btn btn-light btn-sm text-secondary">
-                                        <i className="fa-solid fa-book-open me-2"></i>
-                                        The power of you subc...
-                                    </button>
-                                </div>
-
-
-                                {/* Comment 4 */}
-                                <div className="d-flex justify-content-between align-items-center mb-2 bg-light ff-gill p-1 px-3 fs-sm">
-                                    <span className="">
-                                        <b className="me-2">Ann Darian</b>
-                                        <span>Best Book Ever</span>
-                                    </span>
-
-                                    <button className="btn btn-light btn-sm text-secondary">
-                                        <i className="fa-solid fa-book-open me-2"></i>
-                                        Atomic Habits
-                                    </button>
-                                </div>
-
-                                {/* Comment 5 */}
-                                <div className="d-flex justify-content-between align-items-center mb-2 bg-light ff-gill p-1 px-3 fs-sm">
-                                    <span className="">
-                                        <b className="me-2">SAM</b>
-                                        <span>I didn't like this one</span>
-                                    </span>
-
-                                    <button className="btn btn-light btn-sm text-secondary">
-                                        <i className="fa-solid fa-book-open me-2"></i>
-                                        Fairy Tails 1
-                                    </button>
-                                </div>
-
-                                {/* Comment 5 */}
-                                <div className="d-flex justify-content-between align-items-center mb-2 bg-light ff-gill p-1 px-3 fs-sm">
-                                    <span className="">
-                                        <b className="me-2">Brant Eric</b>
-                                        <span>Waiting for the writer to publish his next episode</span>
-                                    </span>
-
-                                    <button className="btn btn-light btn-sm text-secondary">
-                                        <i className="fa-solid fa-book-open me-2"></i>
-                                        Fairy Tails 3
-                                    </button>
-                                </div>
-
-                                {/* Comment 6 */}
-                                <div className="d-flex justify-content-between align-items-center mb-2 bg-light ff-gill p-1 px-3 fs-sm">
-                                    <span className="">
-                                        <b className="me-2">Farah</b>
-                                        <span>It's very nice to find out that you are not alone in books world</span>
-                                    </span>
-
-                                    <button className="btn btn-light btn-sm text-secondary">
-                                        <i className="fa-solid fa-book-open me-2"></i>
-                                        سيدتي
-                                    </button>
-                                </div>
-                                
-                            </div>
-                        </div>
-                        
-
                     </div>
                 </div>
-            </LoadingPage>
+            </div>
         </UserNav>
     </> );
 }
