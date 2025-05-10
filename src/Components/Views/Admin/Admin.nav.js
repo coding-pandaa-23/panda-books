@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import Auth from "../../Utils/Auth.firebase";
-import AdminRegisterView from "./AdminRegister.view";
 import Notifier from "../../Utils/Notifier";
+import LoadingPage from "../../Widgets/Loading.page";
+import RegisterView from '../Register.view'
 
 const AdminNav = ({children, view = 'books', onClick = ((view)=>{})}) => {
 
@@ -28,9 +29,10 @@ const AdminNav = ({children, view = 'books', onClick = ((view)=>{})}) => {
             }
         })
     }
+    
 
     return ( <>
-        {user && <nav className="navbar navbar-expand-lg bg-body-tertiary">
+        {user != null && user !== '' && <nav className="navbar navbar-expand-lg bg-body-tertiary">
             <div className="container">
                 {/* eslint-disable-next-line */}
                 <a className="navbar-brand" href="/admin">Panda Books <span className="fs-sm text-secondary">ADMIN</span></a>
@@ -66,16 +68,18 @@ const AdminNav = ({children, view = 'books', onClick = ((view)=>{})}) => {
                             <a 
                                 onClick={signOut}
                                 className='nav-link pointer mx-2 text-danger'
-                                ><i class="fa-solid fa-right-from-bracket fa-xl"></i></a>
+                                ><i className="fa-solid fa-right-from-bracket fa-xl"></i></a>
                         </li>
                     </ul>
                 </div>
             </div>
         </nav>}
 
-        {user && children}
+        {user != null && user !== '' && children}
         
-        {!user && <AdminRegisterView />}
+        {user == null && <RegisterView />}
+
+        {user === '' && <LoadingPage/>}
     </> );
 }
  

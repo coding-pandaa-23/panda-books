@@ -1,8 +1,8 @@
 import { useState } from "react";
-import Notifier from "../../Utils/Notifier";
-import Auth from "../../Utils/Auth.firebase";
+import Notifier from "../Utils/Notifier";
+import Auth from "../Utils/Auth.firebase";
 
-const AdminRegisterView = () => {
+const RegisterView = () => {
 
     let auth = new Auth();
     let notifier = new Notifier();
@@ -106,4 +106,4 @@ const AdminRegisterView = () => {
     </> );
 }
  
-export default AdminRegisterView;
+export default RegisterView;

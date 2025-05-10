@@ -1,15 +1,13 @@
 import { useEffect, useState } from "react";
-import Database from "../../Utils/Database.firebase";
 import AdminNav from "./Admin.nav";
 import AdminBooksView from "./AdminBooks.view";
 import AdminCategoriesView from "./AdminCategories.view";
-import LoadingScreen from "../../Widgets/Loading.wid";
-
-
+import LoadingPage from "../../Widgets/Loading.page";
+import DB from "../../Database/Database.db";
 
 const AdminView = () => {
 
-    const db = new Database();
+    const db = new DB();
 
     const [books, setBooks] = useState([])
     const [categories, setCategories] = useState([])
@@ -18,7 +16,7 @@ const AdminView = () => {
     const [isLoading, setLoading] = useState(true);
 
     useEffect(()=>{
-        db.snapshot((bookList, categoryList)=>{
+        db.publicStream((bookList, categoryList)=>{
             setBooks(bookList);
             setCategories(categoryList);
             setLoading(false);
@@ -32,7 +30,7 @@ const AdminView = () => {
         <AdminNav view={view} onClick={(value)=>setView(value)}>
             <div className="container-fluid mt-3">
 
-                <LoadingScreen isLoading={isLoading}>
+                <LoadingPage isLoading={isLoading}>
                     {/* Books Section
                     ========================================================== */}
                     {view === 'books' && <AdminBooksView books={books} categories={categories}/>}
@@ -40,7 +38,7 @@ const AdminView = () => {
                     {/* Books Section
                     ========================================================== */}
                     {view === 'categories' && <AdminCategoriesView categories={categories}/>}
-                </LoadingScreen>
+                </LoadingPage>
 
             </div>
         </AdminNav>

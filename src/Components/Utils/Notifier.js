@@ -4,7 +4,9 @@ export default class Notifier {
 
     /**
      * Show Confirm Dialog
-     * @param {UploadFileDialogObject} object 
+     * @param {object} data 
+     * @param {String} data.extentions e.g.  (.pdf)
+     * @param {Function} data.onConfirm
      */
     uploadFile({
         extentions = '.jpeg,.png,.jpg,.gif',

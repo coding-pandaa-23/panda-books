@@ -1,11 +1,11 @@
 import { useState } from "react";
 import Notifier from "../../Utils/Notifier";
-import Database from "../../Utils/Database.firebase";
+import DB from "../../Database/Database.db";
 
 
 const AdminCategoriesView = ({categories = []}) => {
 
-    const db = new Database();
+    const db = new DB();
     const notifier = new Notifier();
 
     const [search, setSearch] = useState('')
@@ -103,6 +103,10 @@ const AdminCategoriesView = ({categories = []}) => {
                             <i className="fa-solid fa-pen"></i>
                         </button>}
 
+                        <span className="badge text-bg-secondary px-2 mx-2">
+                            {categories.length}
+                        </span>
+
                         <button className="btn btn-sm btn-primary m-0" onClick={newCategory}>
                             <i className="fa-solid fa-plus"></i>
                         </button>
@@ -128,4 +132,4 @@ const AdminCategoriesView = ({categories = []}) => {
  
 export default AdminCategoriesView;
 
-const bookCSS = "list-group-item list-group-item-action d-flex justify-content-between align-items-center py-3";
+const bookCSS = "list-group-item list-group-item-action d-flex justify-content-between align-items-center py-2";

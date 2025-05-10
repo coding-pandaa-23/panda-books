@@ -1,4 +1,5 @@
 import { 
+    createUserWithEmailAndPassword,
     onAuthStateChanged,
     reauthenticateWithCredential, 
     sendPasswordResetEmail, 
@@ -43,9 +44,30 @@ export default class Auth {
      * @param {String} password 
      * @returns {Promise<import("firebase/auth").User>}
      */
-    async login(email, password){
-        let cred = await signInWithEmailAndPassword(this.#auth, email, password);
-        return cred.user;
+    async login(email, password, onError){
+        try {
+            let cred = await signInWithEmailAndPassword(this.#auth, email, password);
+            return cred.user;
+        } catch (error) {
+            onError(error.toString());
+            return null;
+        }
+    }
+
+    /**
+     * Sign In With Eamil And Password
+     * @param {String} email 
+     * @param {String} password 
+     * @returns {Promise<import("firebase/auth").User>}
+     */
+    async createUser(email, password, onError){
+        try {
+            let cred = await createUserWithEmailAndPassword(this.#auth, email, password);
+            return cred.user;
+        } catch (error) {
+            onError(error.toString());
+            return null;
+        }
     }
 
     /**

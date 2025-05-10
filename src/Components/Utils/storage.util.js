@@ -1,4 +1,4 @@
-import { getBlob, getDownloadURL, getStream, ref, uploadBytes } from "firebase/storage";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { storageI } from "./firebase.util";
 
 
@@ -6,32 +6,43 @@ import { storageI } from "./firebase.util";
 export default class StorageUtil {
 
     /**
-     * Upload Or Update a book
-     * @param {String} bid 
-     * @param {File} file 
+     * @callback StateCallback
+     * @param {UploadTaskSnapshot} progress
+     * @param {Boolean} completed
+     * @param {String} downloadLink
+     */
+    
+    /**
+     * @param {object} data 
+     * @param {String} data.path e.g. /public/books/book_id.pdf 
+     * @param {File} data.file 
+     * @param {StateCallback} data.onStateChanged
      * @returns {Promise<String>}
      */
-    async uploadBook(bid, file){
+    async uploadFile(data){
         try {
-            const bookRef = ref(storageI, `/public/books/${bid}.pdf`);
+            const fileRef = ref(storageI, data.path);
 
-            let snapshot = await uploadBytes(bookRef, file);
-            let downloadLink = await getDownloadURL(snapshot.ref);  
+            let task = uploadBytesResumable(fileRef, data.file);
+            task.on('state_changed', async (snapshot)=>{
+                let progress = snapshot.bytesTransferred / snapshot.totalBytes;
 
-            return downloadLink;
+                if(snapshot.state ==='success'){
+                    let downloadLink = await getDownloadURL(snapshot.ref);  
+                    data.onStateChanged(progress, true, downloadLink)
+                }else{
+                    data.onStateChanged(progress, false, null);
+                }
+            });
+
+            let snapshot = await task;
+            let link = await getDownloadURL(snapshot.ref); 
+            console.log('Download Link: ' + link);
+            
+            return link
+
         } catch (error) {
             console.log(error)
-        }
-    }
-
-    async getFile(bid){
-        try {
-            const bookRef = ref(storageI, `/public/books/${bid}.pdf`);
-            let blob = await getBlob(bookRef);
-
-            return blob;
-        } catch (error) {
-            console.log(error);
         }
     }
 }
