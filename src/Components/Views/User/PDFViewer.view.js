@@ -85,9 +85,10 @@ function PDFViewer() {
       message: 'Do you want to start from the begining?',
       confirmText: 'restart',
       onConfirm: async ()=>{
-        let pro = getTemp(progress);
-        pro.index = 1;
-        updateProgress(pro)
+        let deleted = await db.Progress.delete(id);
+        if(deleted){
+          window.location.href = '/';
+        }
       }
     })
   }

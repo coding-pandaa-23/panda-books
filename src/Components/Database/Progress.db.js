@@ -151,6 +151,25 @@ export default class ProgressDB {
         return Progress.instance();
     }
 
+
+    async delete(id){
+        try {
+            if(this.#auth.currentUser){
+                let list = await this.list();
+                let ind = list.findIndex((p)=> p.id === id);
+                if(ind >= 0){
+                    list.splice(ind, 1);
+                    this.updateList(list);
+                    return true;
+                }
+            }
+        } catch (error) {
+            console.log(`Database.firebase(getByID:UserDB) --> ${error}`)
+        }
+
+        return false;
+    }
+
     /**
      * Set index
      * @param {String} bid 
