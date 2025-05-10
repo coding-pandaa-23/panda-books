@@ -94,12 +94,17 @@ const HomeView = () => {
                                             <div className="d-flex justify-content-between align-items-center">
                                                 <span className="text-truncate w-75">{book.title}</span>
                                                 <span className="w-25 text-end">
-                                                    {getProgressById(book.id) && <button className="btn btn-sm btn-primary rounded-pill disabled border-0 mx-1">
+                                                    {getProgressById(book.id) && 
+                                                    (calcProgress(book) === '100' ? 
+                                                    (<button className="btn btn-sm btn-success border-0 disabled border-0 mx-1" style={{width: '100px'}}>
+                                                        Finished
+                                                    </button>)
+                                                    :<button className="btn btn-sm btn-primary disabled border-0 mx-1" style={{width: '100px'}}>
                                                         {calcProgress(book)} %
-                                                    </button>}
+                                                    </button>)}
 
-                                                    {!getProgressById(book.id) && <button className="btn btn-sm border-0 disabled border-0 mx-1">
-                                                        Start reading
+                                                    {!getProgressById(book.id) && <button className="btn btn-secondary btn-sm border-0 disabled border-0 mx-1" style={{width: '100px'}}>
+                                                        Start
                                                     </button>}
                                                 </span>
                                             </div>

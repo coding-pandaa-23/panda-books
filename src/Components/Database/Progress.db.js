@@ -159,7 +159,7 @@ export default class ProgressDB {
                 let ind = list.findIndex((p)=> p.id === id);
                 if(ind >= 0){
                     list.splice(ind, 1);
-                    this.updateList(list);
+                    await this.updateList(list);
                     return true;
                 }
             }

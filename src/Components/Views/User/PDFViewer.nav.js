@@ -21,6 +21,7 @@
 const BookViewerNav = ({
     zoom,
     index,
+    onChangeIndex,
     numberOfPages,
     onZoomIn,
     onZoomOut,
@@ -31,9 +32,7 @@ const BookViewerNav = ({
 
     return ( <>
         <div className="col-12 py-2 mb-5">
-
             <div className="card border-0 rounded-0 shadow-sm fixed-top m-0 px-1 py-2">
-
                 <div className='row m-0'>
                     {/* Main Actions */}
                     <div className="col-6 col-md-4 d-flex justify-content-start align-items-center">
@@ -54,7 +53,7 @@ const BookViewerNav = ({
                         <i className="fa-solid fa-angles-left"></i>
                         </button>
 
-                        <button className="btn btn text-black fw-bold border-0 mx-1 disabled">
+                        <button className="btn btn text-black fw-bold border-0 mx-1" onClick={onChangeIndex}>
                         {index ?? 1} <span className='d-none d-lg-inline-block'>&nbsp;/&nbsp;{numberOfPages}</span>
                         </button>
 

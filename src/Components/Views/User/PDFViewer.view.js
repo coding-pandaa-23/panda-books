@@ -62,7 +62,7 @@ function PDFViewer() {
   async function nextPage(){
     let temp = getTemp(progress);
 
-    if(temp.index + 1 < numPages){
+    if(temp.index + 1 <= numPages){
       temp.index = temp.index + 1;
       updateProgress(temp);
     }
@@ -109,6 +109,29 @@ function PDFViewer() {
     }
   }
 
+  function showIndexDialog(){
+    notifier.showTextDialog({
+      message: 'Enter the page number that you wish to go to',
+      hint: 'page number',
+      value: progress.index,
+      onConfirm: (val)=>{
+        let ind = progress.index;
+        try {
+          ind = parseInt(val);
+          if(ind > 0 && ind <= book.numberOfPages){
+            let temp = getTemp(progress);
+            temp.index = ind;
+            updateProgress(temp);
+          }else{
+            notifier.toast({message: 'Page is not in range', color: 'danger'});
+          }
+        } catch (error) {
+          notifier.toast({message: 'Please Enter a valid number', color: 'danger'});
+        }
+      }
+    })
+  }
+
   return (<>      
 
     {/* Large screens */}
@@ -119,6 +142,7 @@ function PDFViewer() {
         <BookViewerNav 
           bid={id}
           index={progress.index}
+          onChangeIndex={showIndexDialog}
           onNext={nextPage}
           onPrev={prevPage}
           numberOfPages={numPages}
