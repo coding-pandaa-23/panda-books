@@ -44,13 +44,12 @@ export default class Auth {
      * @param {String} password 
      * @returns {Promise<import("firebase/auth").User>}
      */
-    async login(email, password, onError){
+    async login(email, password){
         try {
             let cred = await signInWithEmailAndPassword(this.#auth, email, password);
             return cred.user;
         } catch (error) {
-            onError(error.toString());
-            return null;
+            throw error;
         }
     }
 
@@ -60,13 +59,12 @@ export default class Auth {
      * @param {String} password 
      * @returns {Promise<import("firebase/auth").User>}
      */
-    async createUser(email, password, onError){
+    async createUser(email, password){
         try {
             let cred = await createUserWithEmailAndPassword(this.#auth, email, password);
             return cred.user;
         } catch (error) {
-            onError(error.toString());
-            return null;
+            throw error
         }
     }
 

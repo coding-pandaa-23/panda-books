@@ -36,7 +36,8 @@ i.glow{
   z-index: 10000;
 }
 
-.link-secondary.custom:hover{
+.link-secondary.custom:hover, 
+.link-secondary.custom.active{
   color: black !important;
 }
 

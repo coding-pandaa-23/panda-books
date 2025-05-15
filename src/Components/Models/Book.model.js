@@ -1,3 +1,5 @@
+import { dateNow, generateID } from "../Utils/static.util";
+
 export default class Book {
      /** @type {String} */ id;
     /** @type {String} */ title;
@@ -54,7 +56,7 @@ export default class Book {
         coverUrl
     }){
         return {
-            id: id ?? new Date().getTime().toString(),
+            id: id ?? generateID(),
             title: title,
             author: author,
             rate: rate,
@@ -64,7 +66,7 @@ export default class Book {
             publicationDate: publicationDate,
             numberOfPages: numberOfPages ?? 1,
             language: language ?? 'en',
-            lastUpdate: lastUpdate ?? new Date().toLocaleString(),
+            lastUpdate: lastUpdate ?? dateNow(),
             extras: extras,
             category: category,
             url: url,

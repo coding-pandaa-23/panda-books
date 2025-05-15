@@ -5,7 +5,7 @@ export default class Notifier {
     /**
      * Show Confirm Dialog
      * @param {object} data 
-     * @param {String} data.extentions e.g.  (.pdf)
+     * @param {String} data.extentions e.g.  (.pdf, .png, ...)
      * @param {Function} data.onConfirm
      */
     uploadFile({
@@ -23,6 +23,70 @@ export default class Notifier {
         dialogInput.addEventListener('cancel', ()=>{dialogInput.removeEventListener('change', callback, {once: true});}, {once: true});
 
         dialogInput.click();
+    }
+
+    /**
+     * @typedef {object} OptionsListItem
+     * @property {String} id
+     * @property {String} value
+     */
+
+    /**
+     * @callback OptionsCallback
+     * @param {String} id
+     */
+
+    /**
+     * 
+     * @param {object} options 
+     * @param {String} options.id
+     * @param {String} options.title
+     * @param {Array<OptionsListItem>} options.list You need to convert the list into an object list of {id, value}
+     * @param {OptionsCallback} options.onConfirm
+     */
+    showOptionsDialog({
+        id,
+        title = 'Options',
+        list = [],
+        onConfirm = ()=>{},
+    }){
+        document.querySelector('#liveOptionsDialog .modal-title').innerHTML = title;
+        let ul = document.querySelector('#liveOptionsDialog ul.list-group');
+        const modal = new Modal('#liveOptionsDialog');
+
+        ul.innerHTML = ''
+
+        list.map((option)=>{
+            let item = document.createElement('li');
+            item.classList = `list-group-item list-group-item-action ${option.id === id && 'active'}`;
+            item.dataset.id = option.id
+            item.innerHTML = option.value
+            ul.append(item);
+            return item;
+        });
+
+        
+
+        let itemList = document.querySelectorAll('#liveOptionsDialog li.list-group-item');
+
+        let onItemClick = (e)=>{
+            onConfirm(e.target.dataset.id);
+            modal.hide();
+        }
+
+        itemList.forEach((element)=>{
+            element.addEventListener('click', onItemClick);
+        });
+
+        document.querySelector('#liveOptionsDialog').addEventListener('hide.bs.modal', (e)=>{
+            itemList.forEach((element)=>{
+                element.removeEventListener('click', onItemClick);
+            });
+        })
+
+        
+        modal.show();
+
     }
     
     /**

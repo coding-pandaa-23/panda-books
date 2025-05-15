@@ -2,9 +2,9 @@ import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import HomeView from './Components/Views/User/Home.view';
 import NotFoundView from './Components/Views/NoFound.view';
-import AdminView from './Components/Views/Admin/Admin.view';
 import DialogsContainer from './Components/DialogsContainer';
 import PDFViewer from './Components/Views/User/PDFViewer.view';
+import AdminView from './Components/Views/User/Admin.view';
 
 function App() {
   return (<>

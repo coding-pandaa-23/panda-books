@@ -1,4 +1,14 @@
-const languages = ['ar', 'en'];
+const languages = ['en', 'ar'];
+
+/**
+ * @typedef {Object} BookStatus 
+ * @param {String} bookStatus.unread
+ * @param {String} bookStatus.readingNow
+ * @param {String} bookStatus.finished
+ */
+
+/** @type {{unread : 'Unread', readingNow :'Reading Now', finished: 'Finished', values: ()=> ['unread', 'readingNow', 'finished']}} */
+const bookStatus = {unread : 'Unread', readingNow :'Reading Now', finished: 'Finished', values: ()=> ['unread', 'readingNow', 'finished']}
 
 function formateDate(date){
     let dt = ((date ?? '') === '') ? Date.now() : date;
@@ -19,4 +29,4 @@ function dateNow(){
     return new Date().toLocaleString();
 }
 
-export {formateDate, languages, generateID, dateNow}
+export {formateDate, languages, generateID, dateNow, bookStatus}

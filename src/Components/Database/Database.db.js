@@ -1,4 +1,4 @@
-import { doc, onSnapshot } from 'firebase/firestore';
+import { doc, getDoc, onSnapshot } from 'firebase/firestore';
 import { dbI } from "../Utils/firebase.util";
 import Auth from "../Utils/Auth.firebase";
 import BookDB from "./Book.db";
@@ -71,6 +71,15 @@ export default class DB{
                 callback(null, []);
             }
         })
+    }
+
+    static async isAdmin(uid){
+        try {
+            let snapshot = await getDoc(doc(dbI, `admins/${uid}`));
+            return snapshot.data() != null;
+        } catch (error) {
+            throw error;
+        }
     }
 
     /**

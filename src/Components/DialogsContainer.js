@@ -1,6 +1,7 @@
 import ConfirmDialog from "./Dialogs/Confirm.dig";
 import LinkDialog from "./Dialogs/Link.dialog";
 import LoadingDialog from "./Dialogs/Loading.diag";
+import OptionsDialog from "./Dialogs/Options.dialog";
 import TextDialog from "./Dialogs/Text.dialog";
 import TextAreaDialog from "./Dialogs/Textarea.diag";
 import Toast from "./Dialogs/Toast.diag";
@@ -15,6 +16,7 @@ const DialogsContainer = () => {
         <LoadingDialog />
         <LinkDialog />
         <UploadFileDialog />
+        <OptionsDialog />
     </> );
 }
  

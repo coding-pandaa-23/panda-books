@@ -32,11 +32,12 @@ export default class UserDB {
      */
     async initialize(){
         try {
-            let snapshot = this.#docRef && await getDoc(this.#docRef);
+           
+            let snapshot = this.#docRef && await getDoc(this.#docRef).catch((error)=> null);
             let currentUser = this.#auth.currentUser;
-
-
-            if(currentUser && snapshot){
+            
+            
+            if(currentUser){
                 let instance = UserInfo.instance({
                     uid: currentUser.uid,
                     email: currentUser.email,
@@ -45,15 +46,18 @@ export default class UserDB {
                     photoUrl: currentUser.photoURL,
                     createdAt: currentUser.metadata.creationTime,
                 });
-
-                if(!snapshot.data()){   // If the Document Does not Exists  
+                
+                if(!snapshot?.data()){
                     await setDoc(this.#docRef, {progress: [], [this.#key] : instance});
                 }
-                else if(!snapshot.data()?.userInfo){    // If User Field Was not created 
-                    await updateDoc(this.#docRef, {[this.#key] : instance});
-                }
-                else if(!snapshot.data()?.progress){ // If Progress Field Was Not Created
-                    await updateDoc(this.#docRef, {['progress'] : []});
+                else{
+                    if(!snapshot.data()?.userInfo){    // If User Field Was not created 
+                        await updateDoc(this.#docRef, {[this.#key] : instance});
+                    }
+                    else if(!snapshot.data()?.progress){ // If Progress Field Was Not Created
+                        // eslint-disable-next-line
+                        await updateDoc(this.#docRef, {['progress'] : []});
+                    }
                 }
             }
 
