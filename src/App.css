@@ -154,7 +154,7 @@ background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 20%, rgba(
 
 /* Overflow */
 .of-auto {overflow-y: auto !important;}
-.of-x-auto {display: inline-flex; overflow-x: auto !important;}
+.of-x-auto {overflow-x: auto !important; white-space:nowrap;}
 .of-none {overflow: hidden !important;}
 
 /* Hover */
@@ -342,4 +342,10 @@ background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 20%, rgba(
 }
 .caret-off::after {
   display: none !important;
+}
+
+.admin-book-widget-icon{
+  width: 25px !important;
+  text-align: center !important;
+  margin-inline-end: 20px;
 }

@@ -7,21 +7,22 @@ import Notifier from "../../Utils/Notifier";
 import Book from "../../Models/Book.model";
 import StorageUtil from "../../Utils/storage.util";
 import { Modal } from "bootstrap";
-import AdminBookModal from "./Book.modal";
+import AdminBookModal from "../Modals/Book.modal";
 import AdminChecker from "../../Widgets/AdminChecker.wid";
+import CategoryModal from "../Modals/Category.modal";
 
 const AdminView = () => {
+    const categoryModalID = 'AdminViewCategoryModal'
+
     const db = new DB();
     const notifier = new Notifier();
     const storage = new StorageUtil();
-
-    const [user, setUser] = useState();
 
     const [isLoading, setLoading] = useState(true);
     const [activeBook, setActiveBook] = useState();
 
     const [search, setSearch] = useState('');
-    const [language, setLanguage] = useState(languages[0]);
+    const [language, setLanguage] = useState();
     const [category, setCategory] = useState();
     const [loadingProgress, setLoadinProgress] = useState(1);
 
@@ -55,9 +56,13 @@ const AdminView = () => {
             onConfirm: async (val)=>{
                 setLoading(true);
                 try {
+                    if(val === ''){
+                        notifier.toast({message: 'Title can not be empty', color: 'success'});
+                        return;
+                    }
+
                     let nBook = Book.instance({title: val});
                     await db.Books.insert(nBook)
-                    notifier.toast({message: 'New Book Was Added', color: 'success'});
                 } catch (error) {}
                 setLoading(false);
             }
@@ -123,10 +128,15 @@ const AdminView = () => {
             onConfirm: async (value)=>{
                 setLoading(true);
                 try {
-                    let nBook = getTemp(book);
-                    nBook.title = value;
-                    await db.Books.update(nBook);
-                    notifier.toast({message: 'Book Title Was Updated', color: 'success'});
+                    if(value === ''){
+                        notifier.toast({message: 'Title can not be empty', color: 'danger'});
+                    }else{
+                        let nBook = getTemp(book);
+                        nBook.title = value;
+                        await db.Books.update(nBook);
+                        notifier.toast({message: 'Book Title Was Updated', color: 'success'});
+                    }
+
                 } catch (error) {}
                 setLoading(false);
             }
@@ -186,6 +196,7 @@ const AdminView = () => {
             message: 'Book Publish Date',
             hint: 'e.g. 05/13/1992',
             value: book.publicationDate,
+            type: 'date',
             onConfirm: async (value)=>{
                 setLoading(true);
                 try {
@@ -198,6 +209,7 @@ const AdminView = () => {
             }
         })
     }
+    
 
     /**
      * Set Book Description
@@ -244,6 +256,40 @@ const AdminView = () => {
     }
 
     /**
+     * Set Book Language
+     * @param {Book} book 
+     */
+    function setNumberOfPages(book){
+        notifier.showTextDialog({
+            message: 'Number Of Pages',
+            hint: 'number of pages',
+            value: book.numberOfPages,
+            type: 'number',
+            onConfirm: async (value)=>{
+                setLoading(true);
+
+                try {
+                    // eslint-disable-next-line
+                    let number = new Number(value);
+                    let isNaN = number.toFixed(0) === NaN.toFixed(0)
+                    if(isNaN){
+                        notifier.toast({message: 'not a valid number', color: 'danger'})
+                    } else if(number <= 0){
+                        notifier.toast({message: 'not a valid number', color: 'danger'})
+                    }
+                    else{
+                        let nBook = getTemp(book);
+                        nBook.numberOfPages = value;
+                        await db.Books.update(nBook);
+                        notifier.toast({message: 'Number Of Pages Was Updated', color: 'success'});
+                    }
+                } catch (error) {}
+                setLoading(false);
+            }
+        })
+    }
+
+    /**
      * Set Book Description
      * @param {Book} book 
      */
@@ -277,24 +323,103 @@ const AdminView = () => {
     }
 
 
+    // Category Functions
+    // ====================================================
+    function showCategoryModal(){
+        let modal = Modal.getInstance(`#${categoryModalID}`);
+        if(!modal){modal = new Modal(`#${categoryModalID}`);}
+        modal.show();
+    }
+
+    function setActiveCategory(mCategory){
+        setCategory(mCategory);
+    }
+
+    function addCategory(){
+        notifier.showTextDialog({
+            message: 'Add a new category',
+            hint: 'Enter Category',
+            confirmText: 'add',
+            onConfirm: async (value)=>{
+                setLoading(true);
+                try {
+                    if(value === ''){
+                        notifier.toast({message: 'Category can not be empty', color: 'danger'});
+                    }else{
+                        await db.Categories.insert({title: value});
+                        notifier.toast({message: 'Category was added', color: 'success'});
+
+                    }
+                } catch (error) {
+                    console.log(error);
+                }
+                setLoading(false);
+            }
+        })
+    }
+
+    function updateCategory(mCategory){
+        notifier.showTextDialog({
+            message: 'Update Category',
+            value: mCategory.title,
+            hint: 'Category',
+            onConfirm: async (value)=>{
+                setLoading(true);
+                try {
+                    if(value === ''){
+                        notifier.toast({message: 'Category can not be empty', color: 'danger'});
+                    }else{
+                        mCategory.title = value
+                        await db.Categories.update(mCategory);
+                        notifier.toast({message: 'Category was Updated', color: 'success'});
+                    }
+                } catch (error) {console.log(error);}
+                setLoading(false);
+            }
+        })
+    }
+
+    function deleteCategory(mCategory){
+        notifier.showConfirmDialog({
+            title: 'Delete',
+            message: 'Do you want to delete <b>${mCategory.title}</b>?',
+            onConfirm: async ()=>{
+                setLoading(true);
+                try {
+                    await db.Categories.delete(mCategory);
+                    notifier.toast({message: 'Category was Deleted', color: 'danger'});
+                } catch (error) {}
+                setLoading(false);
+            }
+        })
+    }
+
+
+    // Select Language
+    // ====================================================
+    function selectLanguage(lang){
+        if(!language || lang !== language ){
+            setLanguage(lang);
+        }else{
+            setLanguage(null)
+        }
+    }
+
     // Filters
     // ====================================================
     function filterBook(book){
         let equalTitle = book.title.toLowerCase().includes(search.toLowerCase());
         // let equalStatus = !status || getBookStatus(book) === bookStatus[status];
-        let equalLang = (language === book.language)
-        let equalCategory = !category || book.category === category;
+        let equalLang = !language || (language === book.language)
+        let equalCategory = !category || book.category === category?.id;
         
         return equalTitle && equalLang && equalCategory;
     }
 
     return ( <>
-        <UserNav 
-            view='admin' 
-            isLoading={isLoading} 
-            onUserStateChanged={(fbUser)=>{setUser(fbUser)}}>
+        <UserNav view='admin' isLoading={isLoading} >
+            <AdminChecker withAlertVew={true}>
 
-            <AdminChecker uid={user?.uid} withAlertVew={true}>
                 <div className="container">
                     <div className="row">
                         <div className="col-12 ">
@@ -320,19 +445,22 @@ const AdminView = () => {
                             <div className="mb-3 d-flex justify-content-between">
                                 <div >
                                     {/* Category */}
-                                    <div className="input-group">
-                                        <select className="form-control custom shadow-none" value={category}onChange={(e)=> setCategory(e.target.value)}>
-                                            <option value="">Category</option>
-                                            {categories.map((cat, ind)=> <option key={ind} value={cat.id}>{cat.title}</option>)}
-                                        </select>
-                                    </div>
+                                    <button 
+                                        onClick={showCategoryModal}
+                                        className="btn border-0 border-bottom border-secondary rounded-0 text-start text-truncate text-secondary" style={{width: '200px'}}>
+                                        {category?.title ?? 'Category'}
+                                    </button>
                                 </div>
                                 
-                                <div className="btn-group">
-                                    {languages.map((lang, ind)=> 
-                                        <button key={ind} className={`btn btn-outline-secondary btn-sm px-3 ${lang === language && 'active'}`} onClick={(e)=> setLanguage(lang)}>
-                                            {lang}
-                                        </button>)}
+                                <div>
+                                    <div className="btn-group">
+                                            {languages.map((lang, ind)=> 
+                                                <button 
+                                                    className={`btn btn-outline-secondary btn-sm px-3 ${lang === language && 'active'}`} 
+                                                    key={ind} onClick={(e)=> selectLanguage(lang)}>
+                                                    {lang}
+                                                </button>)}
+                                    </div>
                                 </div>
                             </div>
 
@@ -348,6 +476,7 @@ const AdminView = () => {
                                             key={ind}
                                             book={book}
                                             onShowBook={showBook}
+                                            onSetNumberOfPages={setNumberOfPages}
                                             onSetTitle={setBookTitle}
                                             onSetCover={setBookCover}
                                             onSetPDF={setBookPDF}
@@ -371,7 +500,18 @@ const AdminView = () => {
                         </div>
                     </div>
                 </div>
+
+                <CategoryModal
+                    id={categoryModalID}
+                    category={category}
+                    categories={categories}
+                    onAddCategory={addCategory}
+                    onSelectCategory={setActiveCategory}
+                    onUpdateCategory={updateCategory}
+                    onDeleteCategory={deleteCategory}/>
+
                 <AdminBookModal book={activeBook}/>
+
             </AdminChecker>    
         </UserNav>
     </> );

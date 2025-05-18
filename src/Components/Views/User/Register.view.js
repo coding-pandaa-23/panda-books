@@ -9,7 +9,11 @@ const RegisterView = () => {
 
     const [loginForm, setLoginForm] = useState(true);
 
-    let [user, setUser] = useState({});
+    let [user, setUser] = useState({
+        email: '',
+        password: '',
+        confirmPassword: ''
+    });
     let [showPassword, setShowPassword] = useState(false);
 
     function getTemp(object){
@@ -18,7 +22,6 @@ const RegisterView = () => {
 
     function register(e){
         e.preventDefault();
-        console.log(user)
         loginForm ? login() : createUser();
     }
 
@@ -27,7 +30,11 @@ const RegisterView = () => {
         try {
             await auth.login(user.email, user.password);
         } catch (error) {
-            notifier.toast({message: error, color: 'danger'})
+            if(error.toString().includes('invalid-credential')){
+                notifier.toast({message: 'wrong email/password', color: 'danger'});
+            }else if(error.toString().includes('email-already-in-use')){
+                notifier.toast({message: 'email already exists', color: 'danger'});
+            }
         }
         notifier.setLoading(false);
     }
@@ -42,7 +49,10 @@ const RegisterView = () => {
                 notifier.toast({message: 'passwords does not match', color: 'danger'});
             }
         } catch (error) {
-            notifier.toast({message: error, color: 'danger'});
+            if(error.toString().includes('email-already-in-use')){
+                notifier.toast({message: 'email already exists', color: 'danger'});
+            }
+            // notifier.toast({message: error, color: 'danger'});
         }
         notifier.setLoading(false);
     }

@@ -1,3 +1,4 @@
+import { Modal } from 'bootstrap';
 // eslint-disable-next-line
 import Book from '../Models/Book.model';
 
@@ -20,6 +21,7 @@ import Book from '../Models/Book.model';
  * @param {AdminBookCallback} obj.onSetPDF
  * @param {AdminBookCallback} obj.onSetCover
  * @param {AdminBookCallback} obj.onSetTitle
+ * @param {AdminBookCallback} obj.onSetNumberOfPages
  * @returns 
  */
 
@@ -35,90 +37,188 @@ const AdminBookWidget = ({
     onSetPDF,
     onSetCover,
     onSetTitle,
+    onSetNumberOfPages,
 }) => {
-    return ( <li className="list-group-item">
-        <div>
-            <div className="d-flex justify-content-between align-items-center">
-                <span className="text-truncate w-50">{book.title}</span>
-                <span className="w-50 text-end">
-                    {/* Delete Book */}
-                    <button 
-                        className={`${ButtonStyle} border-danger`}
-                        onClick={(e)=>{e.preventDefault(); onDelete(book)}}>
-                        <i className="fa-solid fa-trash fa-lg mx-1 text-danger"></i>
-                    </button>
 
-                    {/* On Show Content */}
-                    <button 
-                        className={`${ButtonStyle} border-primary`}
-                        onClick={(e)=>{e.preventDefault(); onShowBook(book)}}>
-                            <i className="fa-solid fa-eye fa-lg text-primary"></i>
-                    </button>
+    function showOptionsModal(){
+        let modal = Modal.getInstance(`#${book?.id}`);
+        if(!modal){
+            modal = new Modal(`#${book?.id}`)
+        }
 
-                    <span className="mx-4"></span>
+        modal.show()
+    }
 
-                    {/* Update Language */}
-                    <button 
-                        className={`${ButtonStyle} ${book.language ? 'border-success' : 'border-danger'}`}
-                        onClick={(e)=>{e.preventDefault(); onSetLanguage(book)}}>
-                            <i className="fa-solid fa-language fa-lg"></i>
-                    </button>
+    return (<>
+    <li className="list-group-item list-group-item-action" onClick={(e)=>showOptionsModal(book)}>
+        <span className="text-truncate w-50">{book.title}</span>
+    </li>
+    
+    <div className="modal" id={book.id}>
+            <div className="modal-dialog modal-dialog-centered">
+                <div className="modal-content">
+                <div className="modal-header">
+                    <h5 className="modal-title">{book?.title ?? 'Book Title'}</h5>
+                    <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
 
-                    {/* Update Description */}
-                    <button 
-                        className={`${ButtonStyle} ${!book.desc || book.desc === '' ? 'border-danger' : 'border-success'}`}
-                        onClick={(e)=>{e.preventDefault(); onSetDesc(book)}}>
-                            <i className="fa-solid fa-file-lines fa-lg"></i>
-                    </button>
+                <div className="modal-body">
+                    <ul className="list-group list-group-flush">
 
-                    {/* Update Publish Date */}
-                    <button 
-                        className={`${ButtonStyle} ${book.publicationDate ? 'border-success' : 'border-danger'}`}
-                        onClick={(e)=>{e.preventDefault(); onSetPublishDate(book)}}>
-                            <i className="fa-solid fa-calendar-check fa-lg"></i>
-                    </button>
-                    
-                    {/* Update Category */}
-                    <button 
-                        className={`${ButtonStyle} ${book.category ? 'border-success' : 'border-danger'}`}
-                        onClick={(e)=>{e.preventDefault(); onSetCategory(book)}}>
-                            <i className="fa-solid fa-layer-group fa-lg"></i>
-                    </button>
+                        {/* Update Title */}
+                        <li className={`${listItemStyle}`}
+                            onClick={(e)=>{onSetTitle(book)}}  data-bs-dismiss="modal">
+                                <span className='text-secondary'>
+                                    <i className="fa-solid fa-i fa-lg admin-book-widget-icon"></i>                           
+                                    Title
+                                </span>
 
-                    {/* Update Author */}
-                    <button 
-                        className={`${ButtonStyle} ${book.author ? 'border-success' : 'border-danger'}`}
-                        onClick={(e)=>{e.preventDefault(); onSetAuthor(book)}}>
-                            <i className="fa-solid fa-at fa-lg"></i>
-                    </button>
+                                <span>
+                                    {book?.title && <i className="fa-solid fa-circle-check text-success"></i>}
+                                    {!book?.title && <i className="fa-solid fa-circle-xmark"></i>}
+                                </span>
+                        </li>
 
-                    {/* Update PDF */}
-                    <button 
-                        className={`${ButtonStyle} ${book.url ? 'border-success' : 'border-danger'}`}
-                        onClick={(e)=>{e.preventDefault(); onSetPDF(book)}}>
-                            <i className="fa-solid fa-file-pdf fa-lg"></i>
-                    </button>
+                        {/* Update Category */}
+                        <li className={`${listItemStyle}`}
+                            onClick={(e)=>{onSetCategory(book)}}  data-bs-dismiss="modal">
+                                <span className='text-secondary'>
+                                    <i className="fa-solid fa-layer-group fa-lg admin-book-widget-icon"></i>                           
+                                    Category
+                                </span>
 
-                    {/* Update Cover */}
-                    <button 
-                        className={`${ButtonStyle} ${book.coverUrl ? 'border-success' : 'border-danger'}`}
-                        onClick={(e)=>{e.preventDefault(); onSetCover(book)}}>
-                            <i className="fa-solid fa-image fa-lg"></i>
-                    </button>
+                                <span>
+                                    {(book.category) && <i className="fa-solid fa-circle-check text-success"></i>}
+                                    {(!book.category) && <i className="fa-solid fa-circle-xmark text-danger"></i>}
+                                </span>
+                        </li>
 
-                    {/* Update Title */}
-                    <button 
-                        className={`${ButtonStyle} ${book.title ? 'border-success' : 'border-danger'}`}
-                        onClick={(e)=>{e.preventDefault(); onSetTitle(book)}}>
-                        <i className="fa-solid fa-i fa-lg mx-1"></i>
-                    </button>
+                        {/* Update Number OF Pages */}
+                        <li className={`${listItemStyle}`}
+                            onClick={(e)=>{onSetNumberOfPages(book)}}  data-bs-dismiss="modal">
+                                <span className='text-secondary'>
+                                    <i className="fa-solid fa-list-ol fa-lg admin-book-widget-icon"></i>                           
+                                    Number OF Pages
+                                </span>
 
-                </span>
+                                <span>
+                                    {book?.numberOfPages && <i className="fa-solid fa-circle-check text-success"></i>}
+                                    {!book?.numberOfPages && <i className="fa-solid fa-circle-xmark"></i>}
+                                </span>
+                        </li>
+
+                        {/* Update Language */}
+                        <li className={`${listItemSepStyle}`}
+                            onClick={(e)=>{onSetLanguage(book)}}  data-bs-dismiss="modal">
+                                <span className='text-secondary'>
+                                    <i className="fa-solid fa-language fa-lg admin-book-widget-icon"></i>                           
+                                    Language
+                                </span>
+
+                                <span>
+                                    {book?.language && <i className="fa-solid fa-circle-check text-success"></i>}
+                                    {!book?.language && <i className="fa-solid fa-circle-xmark"></i>}
+                                </span>
+                        </li>
+                        {/* =========================================================== */}
+
+                        {/* Update PDF */}
+                        <li className={`${listItemStyle}`} 
+                            onClick={(e)=>{onSetPDF(book)}}  data-bs-dismiss="modal">
+                                <span className='text-secondary'>
+                                    <i className="fa-solid fa-file-pdf fa-lg admin-book-widget-icon"></i>                           
+                                    PDF File
+                                </span>
+
+                                <span>
+                                    {book?.url && <i className="fa-solid fa-circle-check text-success"></i>}
+                                    {!book?.url && <i className="fa-solid fa-circle-xmark"></i>}
+                                </span>
+                        </li>
+
+                        {/* Update Cover */}
+                        <li className={`${listItemSepStyle}`} 
+                            onClick={(e)=>{onSetCover(book)}}  data-bs-dismiss="modal">
+                                <span className='text-secondary'>
+                                    <i className="fa-solid fa-image fa-lg admin-book-widget-icon"></i>                           
+                                    Cover File
+                                </span>
+
+                                <span>
+                                    {book?.coverUrl && <i className="fa-solid fa-circle-check text-success"></i>}
+                                    {!book?.coverUrl && <i className="fa-solid fa-circle-xmark"></i>}
+                                </span>
+                        </li>
+                        {/* =========================================================== */}
+
+                        {/* Update Author */}
+                        <li className={`${listItemStyle}`}
+                            onClick={(e)=>{onSetAuthor(book)}}  data-bs-dismiss="modal">
+                                <span className='text-secondary'>
+                                    <i className="fa-solid fa-at fa-lg admin-book-widget-icon"></i>                           
+                                    Author
+                                </span>
+
+                                <span>
+                                    {(book.author) && <i className="fa-solid fa-circle-check text-success"></i>}
+                                    {(!book.author) && <i className="fa-solid fa-circle-xmark text-danger"></i>}
+                                </span>
+                        </li>
+
+                        {/* Update Publish Date */}
+                        <li className={`${listItemStyle}`}
+                            onClick={(e)=>{onSetPublishDate(book)}}  data-bs-dismiss="modal">
+                                <span className='text-secondary'>
+                                    <i className="fa-solid fa-calendar-check fa-lg admin-book-widget-icon"></i>                           
+                                    Publish Date
+                                </span>
+
+                                <span>
+                                    {(book.publicationDate) && <i className="fa-solid fa-circle-check text-success"></i>}
+                                    {(!book.publicationDate) && <i className="fa-solid fa-circle-xmark text-danger"></i>}
+                                </span>
+                        </li>
+
+                        {/* Update Description */}
+                        <li className={`${listItemSepStyle}`}
+                            onClick={(e)=>{onSetDesc(book)}}  data-bs-dismiss="modal">
+                                <span className='text-secondary'>
+                                    <i className="fa-solid fa-file-lines fa-lg admin-book-widget-icon"></i>                           
+                                    Description
+                                </span>
+
+                                <span>
+                                    {(book.desc && book.desc  !== '') && <i className="fa-solid fa-circle-check text-success"></i>}
+                                    {(!book.desc || book.desc === '') && <i className="fa-solid fa-circle-xmark text-danger"></i>}
+                                </span>
+                        </li>
+                       
+                        <li className="list-group-item mt-4 p-0 d-flex">
+                                {/* Show Book Information */}
+                                <div className="w-50 px-1">
+                                    <button className="btn btn-primary w-100" data-bs-dismiss="modal" onClick={(e)=>{onShowBook(book)}}>
+                                        <i className="fa-solid fa-eye fa-lg me-2"></i>                           
+                                        Show Book
+                                    </button>
+                                </div>
+
+                                {/* Delete Book */}
+                                <div className="w-50 px-1">
+                                    <button className="btn btn-danger w-100" data-bs-dismiss="modal" onClick={(e)=>{onDelete(book)}}>
+                                        <i className="fa-solid fa-trash fa-lg me-2"></i>                           
+                                        Delete Book
+                                    </button>
+                                </div>
+                        </li>
+                    </ul>
+                </div>
+                </div>
             </div>
         </div>
-</li> );
+    </>);
 }
  
 export default AdminBookWidget;
 
-const ButtonStyle = 'btn btn-sm border-0 mx-1 mb-md-1 btn-light rounded-bottom-0 border-3 border-bottom text-secondary'
+const listItemStyle = 'list-group-item list-group-item-action d-flex justify-content-between';
+const listItemSepStyle = 'list-group-item list-group-item-action d-flex justify-content-between border-warning mb-3 border-0 border-bottom border-2';

@@ -155,7 +155,7 @@ function PDFViewer() {
         {/* Book Pages 
         =======================================================*/}
         
-        {book.url && <div className='col-12 of-x-auto p-3'>
+        {book.url && <div className='col-12 d-inline-flex p-3'>
           {/* <ReadViewer url={book.url}/> */}
           <Document 
             file={book?.url}

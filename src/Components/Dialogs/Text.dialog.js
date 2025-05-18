@@ -11,7 +11,7 @@ const TextDialog = () => {
                 <form id="liveTextDialogForm" onSubmit={(e)=>{e.preventDefault()}}>
                     <div className="modal-body">
                         <div className="input-group">
-                            <input type="text" className="form-control" id="text-modal-title" ng-model="textModal.value" placeholder="Enter Text" />
+                            <input className="form-control" id="text-modal-title" ng-model="textModal.value" placeholder="Enter Text" />
                         </div>
                     </div>
                     <div className="modal-footer">

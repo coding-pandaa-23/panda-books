@@ -1,7 +1,7 @@
 
 
 import { useEffect, useState } from 'react';
-import { formateDate } from '../../Utils/static.util';
+import { emptyCoverUrl, formateDate } from '../../Utils/static.util';
 import DB from '../../Database/Database.db';
 
 
@@ -32,10 +32,11 @@ const AdminBookModal = ({book}) => {
             </div>
             <div className="modal-body">
               <div className="row">
-                <div className="col-12 col-md-4">
-                    {book?.coverUrl && <img src={book.coverUrl} alt="" className='book-cover shadow' />}
+                <div className="col-12 col-md-4 mb-3">
+                    {<img src={book?.coverUrl ?? emptyCoverUrl} alt="" className='book-cover shadow' />}
                 </div>
-                <div className="col-12 col-md-8">
+
+                <div className="col-12 col-md-8 mb-3">
                     <div className='fs-4 fw-bold mb-3'>{book?.title ?? 'Book'}</div>
 
                     {/* Category */}
@@ -68,11 +69,14 @@ const AdminBookModal = ({book}) => {
                         <span className="text-secondary">{book?.rate ?? 'N/A'}</span>
                     </div>
 
+                    {/* Pages */}
+                    <div className='mb-2'>
+                        <code className="me-2">Pages:</code>
+                        <span className="text-secondary">{book?.numberOfPages ?? 'N/A'}</span>
+                    </div>
+
                 </div>
               </div>
-            </div>
-            <div className="modal-footer d-flex justify-content-start">
-              <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
           </div>
         </div>

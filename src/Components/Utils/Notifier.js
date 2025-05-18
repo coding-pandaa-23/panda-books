@@ -139,27 +139,40 @@ export default class Notifier {
     }
 
     /**
-     * Show Text Dialog
-     * @param {TextDialogObject} object 
+     * @callback ConfirmCallback
+     * @param {String} value
      */
-    async showTextDialog({message, hint, value, confirmText, onConfirm, onDelete}){
-        document.querySelector('#liveTextDialog .modal-title').innerHTML = message;
-        document.querySelector('#liveTextDialog .btn-confirm').innerHTML = confirmText ?? 'Save';
-        document.querySelector('#liveTextDialog input').value = value ?? '';
-        document.querySelector('#liveTextDialog input').placeholder = hint ?? 'Enter Text';
+
+    /**
+     * Show Text Dialog
+     * @param {object} object 
+     * @param {String} object.message 
+     * @param {String} object.hint
+     * @param {String} object.value
+     * @param {'text' | 'number' | 'password' | 'date'} object.type
+     * @param {String} object.confirmText
+     * @param {ConfirmCallback} object.onConfirm
+     * @param {callback} object.onDelete
+     */
+    async showTextDialog(object){
+        document.querySelector('#liveTextDialog .modal-title').innerHTML = object.message;
+        document.querySelector('#liveTextDialog .btn-confirm').innerHTML = object.confirmText ?? 'Save';
+        document.querySelector('#liveTextDialog input').value = object.value ?? '';
+        document.querySelector('#liveTextDialog input').placeholder = object.hint ?? 'Enter Text';
+        document.querySelector('#liveTextDialog input').type = object.type ?? 'text';
 
         let form = document.querySelector('#liveTextDialog form');
 
 
-        let callback = ()=>{onConfirm(document.querySelector('#liveTextDialog input').value);}
+        let callback = ()=>{object.onConfirm(document.querySelector('#liveTextDialog input').value);}
 
-        let deleteCallback = ()=>{onDelete();}
+        let deleteCallback = ()=>{object.onDelete();}
 
         let dialog = document.getElementById('liveTextDialog');
         let btnDelete = document.querySelector('#liveTextDialog .btn-delete');
 
         // Hide/Show Delete Button
-        if(onDelete == null){btnDelete.classList.add('d-none')}
+        if(!object.onDelete){btnDelete.classList.add('d-none')}
         else{btnDelete.classList.remove('d-none')}
 
         // Modal is visible

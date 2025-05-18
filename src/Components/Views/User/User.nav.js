@@ -51,13 +51,12 @@ const UserNav = ({
         {!hideTopBar && <nav className="navbar navbar-expand-lg bg-body-tertiary mb-2">
             <div className="container-fluid px-lg-5 px-md-3">
                 <a className="navbar-brand fw-bold text-secondary" href="/">
-                    <i className="fa-solid fa-book-open fa-xl me-2"></i>
+                    {view !== 'admin' && <i className="fa-solid fa-book-open fa-xl me-2"></i>}
                     <span>
-                        VBOOKS
-                        {view === 'admin' && <small className="ms-2 fs-sm fw-normal">ADMIN</small>}
+                        {view !== 'admin' && 'VBOOKS'}
+                        {view === 'admin' && 'ADMIN'}
                     </span>
                 </a>
-                
 
                 <div className="">
                     {user && <ul className="nav ms-auto">
@@ -67,7 +66,7 @@ const UserNav = ({
                             </a>
                         </li>
                         
-                        <AdminChecker uid={user?.uid}>
+                        <AdminChecker>
                             <li className="nav-item">
                                 <a className={`nav-link link-secondary custom ${view === 'admin' && 'active'}`} aria-current="page" href="/admin">
                                     Admin
